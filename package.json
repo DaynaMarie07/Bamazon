@@ -17,8 +17,10 @@
   },
   "homepage": "https://github.com/DaynaMarie07/Bamazon#readme",
   "dependencies": {
+    "console.table": "^0.10.0",
     "inquirer": "^5.2.0",
     "mysql": "^2.15.0",
     "node.js": "0.0.0"
-  }
+  },
+  "devDependencies": {}
 }
