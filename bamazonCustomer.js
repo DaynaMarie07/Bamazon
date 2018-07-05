@@ -11,14 +11,12 @@ var connection = mysql.createConnection({
    database : 'bamazon',    
 });
 
-// connect server and database
 connection.connect(function(err) {
     if (err) {
       console.error("error connecting: " + err.stack);
     }
     loadProducts();
   });
-  
 // Function to load the products table from the database and print results to the console
 function loadProducts() {
     // Selects all of the data from the MySQL products table
@@ -28,13 +26,13 @@ function loadProducts() {
       // Draw the table in the terminal using the response
       console.table(res);
   
-      // Then prompt the customer for their choice of product, pass all the products to promptCustomerForItem
-      promptCustomerForItem(res);
+      // Then prompt the customer for their choice of product, pass all the products to askCustProd
+      askCustProd(res);
     });
   }
 
 // Prompt the customer for a product ID
-function promptCustomerForItem(inventory) {
+function askCustProd(inventory) {
     // Prompts user for what they would like to purchase
     inquirer
       .prompt([
@@ -49,25 +47,25 @@ function promptCustomerForItem(inventory) {
       ])
       .then(function(val) {
         // Check if the user wants to quit the program
-        checkIfShouldExit(val.choice);
+        checkExit(val.choice);
         var choiceId = parseInt(val.choice);
         var product = checkInventory(choiceId, inventory);
   
         // If there is a product with the id the user chose, prompt the customer for a desired quantity
         if (product) {
-          // Pass the chosen product to promptCustomerForQuantity
-          promptCustomerForQuantity(product);
+          // Pass the chosen product to howMany
+          howMany(product);
         }
         else {
           // Otherwise let them know the item is not in the inventory, re-run loadProducts
-          console.log("\nThat item is not in the inventory.");
+          console.log("\nOops sorry, we dont carry that item.");
           loadProducts();
         }
       });
   }
   
   // Prompt the customer for a product quantity
-  function promptCustomerForQuantity(product) {
+  function howMany(product) {
     inquirer
       .prompt([
         {
@@ -80,13 +78,12 @@ function promptCustomerForItem(inventory) {
         }
       ])
       .then(function(val) {
-        // Check if the user wants to quit the program
-        checkIfShouldExit(val.quantity);
+       checkExit(val.quantity);
         var quantity = parseInt(val.quantity);
   
         // If there isn't enough of the chosen product and quantity, let the user know and re-run loadProducts
         if (quantity > product.stock_quantity) {
-          console.log("\nInsufficient quantity!");
+          console.log("\nNo Beuno!");
           loadProducts();
         }
         else {
@@ -95,8 +92,6 @@ function promptCustomerForItem(inventory) {
         }
       });
   }
-  
-  // Purchase the desired quantity of the desired item
   function makePurchase(product, quantity) {
     connection.query(
       "UPDATE products SET stock_quantity = stock_quantity - ? WHERE item_id = ?",
@@ -122,10 +117,10 @@ function promptCustomerForItem(inventory) {
   }
   
   // Check to see if the user wants to quit the program
-  function checkIfShouldExit(choice) {
+  functioncheckExit(choice) {
     if (choice.toLowerCase() === "q") {
       // Log a message and exit the current node process
-      console.log("Peace!");
+      console.log("Chow!!");
       process.exit(0);
     }
   }
